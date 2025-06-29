@@ -14,6 +14,9 @@ qodana = "2024.3.4"
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 opentest4j = { group = "org.opentest4j", name = "opentest4j", version.ref = "opentest4j" }
 gson = { group = "com.google.code.gson", name = "gson", version = "2.10.1" }
+flexmark = { group = "com.vladsch.flexmark", name = "flexmark-all", version = "0.64.8" }
+jsoup = { group = "org.jsoup", name = "jsoup", version = "1.17.2" }
+openhtmltopdf = { group = "com.openhtmltopdf", name = "openhtmltopdf-pdfbox", version = "1.0.10" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
