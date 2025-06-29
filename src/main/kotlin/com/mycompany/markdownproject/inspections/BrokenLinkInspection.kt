@@ -12,10 +12,10 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor
 import com.intellij.util.ui.UIUtil
 import org.intellij.plugins.markdown.lang.MarkdownLanguage
-import org.intellij.plugins.markdown.lang.psi.MarkdownElementTypes
+import org.intellij.plugins.markdown.lang.MarkdownElementTypes
 import org.intellij.plugins.markdown.lang.psi.MarkdownPsiElement
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile
-import org.intellij.plugins.markdown.lang.psi.impl.MarkdownLinkDestinationImpl
+import org.intellij.plugins.markdown.lang.psi.impl.MarkdownLinkDestination
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -28,7 +28,7 @@ class BrokenLinkInspection : LocalInspectionTool() {
             }
 
             override fun visitElement(element: com.intellij.psi.PsiElement) {
-                if (element is MarkdownLinkDestinationImpl) {
+                if (element is MarkdownLinkDestination) {
                     val url = element.text
                     if (!url.startsWith("http")) {
                         val vf = element.containingFile.virtualFile.parent?.findFileByRelativePath(url)

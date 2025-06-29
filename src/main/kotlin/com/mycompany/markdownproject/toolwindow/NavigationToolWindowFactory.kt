@@ -11,6 +11,7 @@ import com.intellij.util.ui.components.BorderLayoutPanel
 import com.intellij.openapi.fileEditor.FileEditorManager
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile
 import javax.swing.DefaultListModel
+import javax.swing.JList
 import javax.swing.DropMode
 import javax.swing.TransferHandler
 import java.awt.datatransfer.DataFlavor
