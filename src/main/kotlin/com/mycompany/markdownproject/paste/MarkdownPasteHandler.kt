@@ -31,6 +31,19 @@ class MarkdownPasteHandler : EditorActionHandler() {
     private val parser = Parser.builder().build()
     private val formatter = Formatter.builder().build()
 
+    override fun isEnabledForCaret(editor: Editor, caret: Caret, dataContext: DataContext): Boolean {
+        val project = editor.project ?: return original.isEnabled(editor, caret, dataContext)
+        val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
+        if (psiFile == null || psiFile.fileType.defaultExtension != "md") {
+            return original.isEnabled(editor, caret, dataContext)
+        }
+        val state = com.mycompany.markdownproject.settings.MarkdownPasteSettings.instance().state
+        if (!state.autoConvert) {
+            return original.isEnabled(editor, caret, dataContext)
+        }
+        return true
+    }
+
     private fun extractHtml(transferable: Transferable?): String? {
         if (transferable == null) return null
         listOf(DataFlavor.fragmentHtmlFlavor, DataFlavor.allHtmlFlavor).forEach { flavor ->

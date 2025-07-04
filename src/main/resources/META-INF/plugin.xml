@@ -9,7 +9,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <directoryProjectGenerator implementation="com.mycompany.markdownproject.wizard.MarkdownProjectGenerator" />
-        <editorActionHandler action="EditorPaste" implementationClass="com.mycompany.markdownproject.paste.MarkdownPasteHandler" />
+        <editorActionHandler action="EditorPaste" implementationClass="com.mycompany.markdownproject.paste.MarkdownPasteHandler" language="Markdown" />
         <fileDropHandler implementation="com.mycompany.markdownproject.paste.ImageDropHandler" />
         <applicationService serviceImplementation="com.mycompany.markdownproject.settings.MarkdownPasteSettings" />
         <applicationService serviceImplementation="com.mycompany.markdownproject.draft.DraftService" />
