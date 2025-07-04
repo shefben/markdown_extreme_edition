@@ -22,7 +22,11 @@ import java.awt.Graphics2D
 import java.io.ByteArrayOutputStream
 
 class MarkdownPasteHandler : EditorActionHandler() {
-    private val original = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_PASTE)
+    // Use the editor specific paste action so the returned handler is an
+    // EditorActionHandler. Using IdeActions.ACTION_PASTE causes a
+    // ClassCastException because that ID refers to a generic AnAction.
+    private val original = EditorActionManager.getInstance()
+        .getActionHandler(IdeActions.ACTION_EDITOR_PASTE)
     private val htmlConverter = FlexmarkHtmlConverter.builder().build()
     private val parser = Parser.builder().build()
     private val formatter = Formatter.builder().build()
