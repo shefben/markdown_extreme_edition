@@ -16,5 +16,6 @@ class MarkdownModuleType : ModuleType<MarkdownModuleBuilder>(ID) {
     override fun createModuleBuilder() = MarkdownModuleBuilder()
     override fun getName() = "Markdown Project"
     override fun getDescription() = "Project type for Markdown documentation"
-    override fun getNodeIcon(isOpened: Boolean): Icon = AllIcons.FileTypes.Markdown
+    // Use a generic text file icon to avoid compile-time dependency on the Markdown plugin's icons
+    override fun getNodeIcon(isOpened: Boolean): Icon = AllIcons.FileTypes.Text
 }
