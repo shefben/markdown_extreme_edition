@@ -2,7 +2,7 @@ package com.mycompany.markdownproject.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.vladsch.flexmark.formatter.Formatter
@@ -10,16 +10,15 @@ import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter
 import com.vladsch.flexmark.parser.Parser
 import org.jsoup.Jsoup
 
-class ConvertSelectionHtmlAction : AnAction("Convert HTML Selection") {
+class ConvertHtml5SelectionAction : AnAction("Convert HTML5 Selection") {
     private val converter = FlexmarkHtmlConverter.builder().build()
     private val parser = Parser.builder().build()
     private val formatter = Formatter.builder().build()
 
     override fun actionPerformed(e: AnActionEvent) {
-        val editor = e.getData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR) ?: return
-        val selection = editor.selectionModel
-        val html = selection.selectedText ?: return
-        val cleaned = Jsoup.parse(html).apply { select("style,script").remove() }.body().html()
+        val editor = e.getData(CommonDataKeys.EDITOR) ?: return
+        val html = editor.selectionModel.selectedText ?: return
+        val cleaned = Jsoup.parse(html).body().html()
         val markdown = converter.convert(cleaned)
         val formatted = formatter.render(parser.parse(markdown))
         WriteCommandAction.runWriteCommandAction(e.project) {
@@ -28,8 +27,8 @@ class ConvertSelectionHtmlAction : AnAction("Convert HTML Selection") {
     }
 
     override fun update(e: AnActionEvent) {
-        val editor = e.getData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR)
-        val psiFile = e.getData(com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE)
+        val editor = e.getData(CommonDataKeys.EDITOR)
+        val psiFile = e.getData(CommonDataKeys.PSI_FILE)
         val hasSelection = editor?.selectionModel?.hasSelection() ?: false
         val isMarkdown = psiFile?.fileType?.defaultExtension == "md"
         e.presentation.isEnabledAndVisible = hasSelection && isMarkdown

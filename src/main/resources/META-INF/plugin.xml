@@ -16,6 +16,7 @@
         <applicationService serviceImplementation="com.mycompany.markdownproject.snippets.SnippetService" />
         <applicationConfigurable id="markdown.paste" displayName="Markdown Paste" instance="com.mycompany.markdownproject.settings.MarkdownPasteConfigurable" />
         <projectType id="MARKDOWN" name="Markdown Project" />
+        <moduleType id="MARKDOWN_MODULE_TYPE" implementationClass="com.mycompany.markdownproject.wizard.MarkdownModuleType"/>
         <projectService serviceImplementation="com.mycompany.markdownproject.tasks.TaskService" />
         <projectService serviceImplementation="com.mycompany.markdownproject.history.LinkHistoryService" />
         <localInspection language="Markdown" shortName="MarkdownLint" implementationClass="com.mycompany.markdownproject.inspections.MarkdownLintInspection" displayName="Markdown Lint" />
@@ -28,41 +29,99 @@
         <spellchecker.support implementation="com.mycompany.markdownproject.spellcheck.MarkdownSpellcheckStrategy" />
     </extensions>
     <actions>
+        <group id="MarkdownToolsGroup" text="Markdown Tools" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+        <group id="MarkdownPopupGroup" text="Markdown Tools" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </group>
         <action id="Markdown.InsertTable" class="com.mycompany.markdownproject.actions.InsertTableAction" text="Insert Table">
-            <keyboard-shortcut first-keystroke="ctrl alt T"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt T"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.InsertCodeBlock" class="com.mycompany.markdownproject.actions.InsertCodeBlockAction" text="Insert Code Block">
-            <keyboard-shortcut first-keystroke="ctrl alt C"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.InsertImage" class="com.mycompany.markdownproject.actions.InsertImageAction" text="Insert Image">
-            <keyboard-shortcut first-keystroke="ctrl alt I"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt I"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.GenerateToc" class="com.mycompany.markdownproject.actions.GenerateTocAction" text="Generate TOC">
-            <keyboard-shortcut first-keystroke="ctrl alt shift T"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift T"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.CopyAsTemplate" class="com.mycompany.markdownproject.actions.CopyCodeBlockAsTemplateAction" text="Copy as Template" icon="AllIcons.Actions.Copy">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.InsertFrontMatter" class="com.mycompany.markdownproject.actions.InsertFrontMatterAction" text="Insert Front Matter">
-            <keyboard-shortcut first-keystroke="ctrl alt M"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt M"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.InsertSnippet" class="com.mycompany.markdownproject.actions.InsertSnippetAction" text="Insert Snippet">
-            <keyboard-shortcut first-keystroke="ctrl alt S"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt S"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.ExportHtml" class="com.mycompany.markdownproject.actions.ExportHtmlAction" text="Export Document">
-            <keyboard-shortcut first-keystroke="ctrl alt E"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt E"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.ConvertHtmlSelection" class="com.mycompany.markdownproject.actions.ConvertSelectionHtmlAction" text="Convert HTML Selection">
-            <keyboard-shortcut first-keystroke="ctrl alt H"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt H"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.ConvertHtml5Selection" class="com.mycompany.markdownproject.actions.ConvertHtml5SelectionAction" text="Convert Highlighted HTML">
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.FixFormatting" class="com.mycompany.markdownproject.actions.FixFormattingAction" text="Fix Markdown Formatting">
-            <keyboard-shortcut first-keystroke="ctrl alt F"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt F"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.InsertCitation" class="com.mycompany.markdownproject.actions.InsertCitationAction" text="Insert Citation">
-            <keyboard-shortcut first-keystroke="ctrl alt shift C"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift C"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
         <action id="Markdown.GenerateReleaseNotes" class="com.mycompany.markdownproject.actions.GenerateReleaseNotesAction" text="Generate Release Notes">
-            <keyboard-shortcut first-keystroke="ctrl alt R"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt R"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.PasteFromBrowser" class="com.mycompany.markdownproject.actions.PasteFromBrowserAction" text="Paste from Browser">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift V"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.InsertHorizontalRule" class="com.mycompany.markdownproject.actions.InsertHorizontalRuleAction" text="Insert Horizontal Rule">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt J"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.InsertBlockquote" class="com.mycompany.markdownproject.actions.InsertBlockquoteAction" text="Insert Blockquote">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt Q"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.InsertStrikethrough" class="com.mycompany.markdownproject.actions.InsertStrikethroughAction" text="Insert Strikethrough">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
+        </action>
+        <action id="Markdown.LinkFromClipboard" class="com.mycompany.markdownproject.actions.LinkFromClipboardAction" text="Insert Link from Clipboard">
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt L"/>
+            <add-to-group group-id="MarkdownToolsGroup"/>
+            <add-to-group group-id="MarkdownPopupGroup"/>
         </action>
     </actions>
 </idea-plugin>
