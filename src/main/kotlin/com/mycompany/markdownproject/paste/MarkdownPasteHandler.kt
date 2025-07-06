@@ -22,6 +22,7 @@ import java.awt.Graphics2D
 import java.io.ByteArrayOutputStream
 
 class MarkdownPasteHandler : EditorActionHandler() {
+    private val inProgress = ThreadLocal.withInitial { false }
     // Use the editor specific paste action so the returned handler is an
     // EditorActionHandler. Using IdeActions.ACTION_PASTE causes a
     // ClassCastException because that ID refers to a generic AnAction.
@@ -118,6 +119,12 @@ class MarkdownPasteHandler : EditorActionHandler() {
 
 
     override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
+        if (inProgress.get()) {
+            original.execute(editor, caret, dataContext)
+            return
+        }
+        inProgress.set(true)
+        try {
         val project = editor.project
         val psiFile = project?.let { PsiDocumentManager.getInstance(it).getPsiFile(editor.document) }
         if (psiFile == null || psiFile.fileType.defaultExtension != "md") {
@@ -166,6 +173,9 @@ class MarkdownPasteHandler : EditorActionHandler() {
             }
         } else {
             fallbackPaste(editor, caret, dataContext)
+        }
+        } finally {
+            inProgress.set(false)
         }
     }
 }
