@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler
 import com.intellij.openapi.editor.actionSystem.EditorActionManager
 import com.intellij.openapi.ide.CopyPasteManager
+import java.awt.datatransfer.DataFlavor
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiDocumentManager
 import com.vladsch.flexmark.formatter.Formatter
@@ -15,13 +16,13 @@ import com.vladsch.flexmark.parser.Parser
 import org.jsoup.Jsoup
 import java.awt.Image
 import java.awt.image.BufferedImage
-import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import javax.imageio.ImageIO
 import java.awt.Graphics2D
 import java.io.ByteArrayOutputStream
 
 class MarkdownPasteHandler : EditorActionHandler() {
+    private val inProgress = ThreadLocal.withInitial { false }
     // Use the editor specific paste action so the returned handler is an
     // EditorActionHandler. Using IdeActions.ACTION_PASTE causes a
     // ClassCastException because that ID refers to a generic AnAction.
@@ -99,18 +100,41 @@ class MarkdownPasteHandler : EditorActionHandler() {
         return doc.body().html()
     }
 
+    private fun fallbackPaste(editor: Editor, caret: Caret?, dataContext: DataContext) {
+        if (original !== this) {
+            original.execute(editor, caret, dataContext)
+        } else {
+            val text = try {
+                CopyPasteManager.getInstance().contents?.getTransferData(DataFlavor.stringFlavor) as? String
+            } catch (_: Exception) {
+                null
+            }
+            if (text != null) {
+                WriteCommandAction.runWriteCommandAction(editor.project) {
+                    editor.document.insertString(editor.caretModel.offset, text)
+                }
+            }
+        }
+    }
+
 
     override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext) {
+        if (inProgress.get()) {
+            original.execute(editor, caret, dataContext)
+            return
+        }
+        inProgress.set(true)
+        try {
         val project = editor.project
         val psiFile = project?.let { PsiDocumentManager.getInstance(it).getPsiFile(editor.document) }
         if (psiFile == null || psiFile.fileType.defaultExtension != "md") {
-            original.execute(editor, caret, dataContext)
+            fallbackPaste(editor, caret, dataContext)
             return
         }
         val settings = com.mycompany.markdownproject.settings.MarkdownPasteSettings.instance()
         val state = settings.state
         if (!state.autoConvert) {
-            original.execute(editor, caret, dataContext)
+            fallbackPaste(editor, caret, dataContext)
             return
         }
         val clipboard = CopyPasteManager.getInstance().contents
@@ -148,7 +172,10 @@ class MarkdownPasteHandler : EditorActionHandler() {
                 PsiDocumentManager.getInstance(project!!).commitDocument(editor.document)
             }
         } else {
-            original.execute(editor, caret, dataContext)
+            fallbackPaste(editor, caret, dataContext)
+        }
+        } finally {
+            inProgress.set(false)
         }
     }
 }
