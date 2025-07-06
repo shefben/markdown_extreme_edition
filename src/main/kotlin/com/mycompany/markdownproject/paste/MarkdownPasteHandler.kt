@@ -108,7 +108,13 @@ class MarkdownPasteHandler : EditorActionHandler() {
         }
         if (text != null) {
             WriteCommandAction.runWriteCommandAction(editor.project) {
-                editor.document.insertString(editor.caretModel.offset, text)
+                val model = editor.selectionModel
+                if (model.hasSelection()) {
+                    editor.document.replaceString(model.selectionStart, model.selectionEnd, text)
+                } else {
+                    editor.document.insertString(editor.caretModel.offset, text)
+                }
+                editor.project?.let { PsiDocumentManager.getInstance(it).commitDocument(editor.document) }
             }
         }
     }
