@@ -100,19 +100,15 @@ class MarkdownPasteHandler : EditorActionHandler() {
         return doc.body().html()
     }
 
-    private fun fallbackPaste(editor: Editor, caret: Caret?, dataContext: DataContext) {
-        if (original !== this) {
-            original.execute(editor, caret, dataContext)
-        } else {
-            val text = try {
-                CopyPasteManager.getInstance().contents?.getTransferData(DataFlavor.stringFlavor) as? String
-            } catch (_: Exception) {
-                null
-            }
-            if (text != null) {
-                WriteCommandAction.runWriteCommandAction(editor.project) {
-                    editor.document.insertString(editor.caretModel.offset, text)
-                }
+    private fun fallbackPaste(editor: Editor) {
+        val text = try {
+            CopyPasteManager.getInstance().contents?.getTransferData(DataFlavor.stringFlavor) as? String
+        } catch (_: Exception) {
+            null
+        }
+        if (text != null) {
+            WriteCommandAction.runWriteCommandAction(editor.project) {
+                editor.document.insertString(editor.caretModel.offset, text)
             }
         }
     }
@@ -128,13 +124,13 @@ class MarkdownPasteHandler : EditorActionHandler() {
         val project = editor.project
         val psiFile = project?.let { PsiDocumentManager.getInstance(it).getPsiFile(editor.document) }
         if (psiFile == null || psiFile.fileType.defaultExtension != "md") {
-            fallbackPaste(editor, caret, dataContext)
+            fallbackPaste(editor)
             return
         }
         val settings = com.mycompany.markdownproject.settings.MarkdownPasteSettings.instance()
         val state = settings.state
         if (!state.autoConvert) {
-            fallbackPaste(editor, caret, dataContext)
+            fallbackPaste(editor)
             return
         }
         val clipboard = CopyPasteManager.getInstance().contents
@@ -172,7 +168,7 @@ class MarkdownPasteHandler : EditorActionHandler() {
                 PsiDocumentManager.getInstance(project!!).commitDocument(editor.document)
             }
         } else {
-            fallbackPaste(editor, caret, dataContext)
+            fallbackPaste(editor)
         }
         } finally {
             inProgress.set(false)
