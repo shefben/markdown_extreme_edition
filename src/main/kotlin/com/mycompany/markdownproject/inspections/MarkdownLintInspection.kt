@@ -12,6 +12,8 @@ import com.mycompany.markdownproject.inspections.RemoveTrailingSpaceFix
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile
 
 class MarkdownLintInspection : LocalInspectionTool() {
+    override fun getGroupDisplayName(): String = "Markdown"
+    override fun getGroupPath(): Array<String> = arrayOf("Markdown")
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PsiElementVisitor() {
             override fun visitFile(file: PsiFile) {

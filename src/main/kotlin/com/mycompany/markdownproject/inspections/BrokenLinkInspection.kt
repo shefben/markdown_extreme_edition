@@ -20,6 +20,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class BrokenLinkInspection : LocalInspectionTool() {
+    override fun getGroupDisplayName(): String = "Markdown"
+    override fun getGroupPath(): Array<String> = arrayOf("Markdown")
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PsiRecursiveElementWalkingVisitor() {
             override fun visitFile(file: PsiFile) {
